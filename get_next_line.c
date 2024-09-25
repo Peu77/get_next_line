@@ -41,7 +41,6 @@ int	read_file(int fd, char **lineBuffer, char *buffer)
 char	*get_result(char **lineBuffer, char *new_line_pos)
 {
 	char	*line;
-	char	*line;
 	char	*temp;
 
 	if (new_line_pos == NULL)
