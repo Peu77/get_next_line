@@ -6,7 +6,7 @@
 /*   By: eebert <eebert@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 23:10:16 by eebert            #+#    #+#             */
-/*   Updated: 2024/09/25 23:10:18 by eebert           ###   ########.fr       */
+/*   Updated: 2024/09/28 18:38:17 by eebert           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 # define GET_NEXT_LINE_H
 
 # include <stdlib.h>
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 10000000
+# endif
 
 char	*get_next_line(int fd);
 

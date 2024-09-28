@@ -14,10 +14,6 @@
 #include <malloc.h>
 #include <unistd.h>
 
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 10000000
-#endif
-
 int	read_file(int fd, char **lineBuffer, char *buffer)
 {
 	int		read_bytes;
