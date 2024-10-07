@@ -13,78 +13,79 @@
 #include "get_next_line.h"
 #include <malloc.h>
 #include <unistd.h>
+#include <fcntl.h>
 
-int	read_file(int fd, char **lineBuffer, char *buffer)
-{
-	int		read_bytes;
-	char	*temp;
+int read_file(int fd, char **lineBuffer, char *buffer) {
+    int read_bytes;
+    char *temp;
 
-	read_bytes = read(fd, buffer, BUFFER_SIZE);
-	if (read_bytes <= 0)
-		return (read_bytes);
-	buffer[read_bytes] = '\0';
-	if (*lineBuffer == NULL)
-		*lineBuffer = ft_strndup(buffer, read_bytes);
-	else
-	{
-		temp = ft_strjoin(*lineBuffer, buffer);
-		free(*lineBuffer);
-		*lineBuffer = temp;
-	}
-	return (read_bytes);
+    read_bytes = read(fd, buffer, BUFFER_SIZE);
+    if (read_bytes <= 0)
+        return (read_bytes);
+    buffer[read_bytes] = '\0';
+    if (*lineBuffer == NULL)
+        *lineBuffer = ft_strndup(buffer, read_bytes);
+    else {
+        temp = ft_strjoin(*lineBuffer, buffer);
+        free(*lineBuffer);
+        *lineBuffer = temp;
+    }
+    return (read_bytes);
 }
 
-char	*get_result(char **lineBuffer, char *new_line_pos)
-{
-	char	*line;
-	char	*temp;
+char *get_result(char **lineBuffer, char *new_line_pos) {
+    char *line;
+    char *temp;
 
-	if (new_line_pos == NULL)
-	{
-		if (*lineBuffer == NULL || **lineBuffer == '\0')
-			return (NULL);
-		line = ft_strndup(*lineBuffer, (size_t)ft_strlen(*lineBuffer));
-		free(*lineBuffer);
-		*lineBuffer = NULL;
-		return (line);
-	}
-	line = ft_strndup(*lineBuffer, new_line_pos - *lineBuffer + 1);
-	temp = ft_strndup(new_line_pos + 1, (size_t)ft_strlen(new_line_pos + 1));
-	free(*lineBuffer);
-	*lineBuffer = temp;
-	return (line);
+    if (*lineBuffer == NULL) {
+        return (NULL);
+    }
+
+    if (**lineBuffer == '\0') {
+        free(*lineBuffer);
+        *lineBuffer = NULL;
+        return (NULL);
+    }
+
+    if (new_line_pos == NULL) {
+        line = ft_strndup(*lineBuffer, (size_t) ft_strlen(*lineBuffer));
+        free(*lineBuffer);
+        *lineBuffer = NULL;
+        return (line);
+    }
+    line = ft_strndup(*lineBuffer, new_line_pos - *lineBuffer + 1);
+    temp = ft_strndup(new_line_pos + 1, (size_t) ft_strlen(new_line_pos + 1));
+    free(*lineBuffer);
+    if (line == NULL || temp == NULL) {
+        free(line);
+        free(temp);
+        return (NULL);
+    }
+    *lineBuffer = temp;
+    return (line);
 }
 
-char	*get_next_line(int fd)
-{
-	static char	*line_buffer = NULL;
-	char		*buffer;
-	int			bytes_read;
-	int			total_bytes_read;
-	char		*new_line_pos;
+char *get_next_line(int fd) {
+    static char *line_buffer = NULL;
+    char *buffer;
+    int bytes_read;
+    int total_bytes_read;
+    char *new_line_pos;
 
-	bytes_read = 1;
-	total_bytes_read = -1;
-	new_line_pos = NULL;
-	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	while (new_line_pos == NULL && bytes_read > 0)
-	{
-		total_bytes_read += bytes_read;
-		bytes_read = read_file(fd, &line_buffer, buffer);
-		new_line_pos = ft_strchr(line_buffer + total_bytes_read, '\n');
-	}
-	free(buffer);
-	return (get_result(&line_buffer, new_line_pos));
+    bytes_read = 1;
+    total_bytes_read = -1;
+    new_line_pos = NULL;
+    buffer = (char *) malloc(sizeof(char) * (BUFFER_SIZE + 1));
+    if (!buffer) {
+        free(line_buffer);
+        line_buffer = NULL;
+        return (NULL);
+    }
+    while (new_line_pos == NULL && bytes_read > 0) {
+        total_bytes_read += bytes_read;
+        bytes_read = read_file(fd, &line_buffer, buffer);
+        new_line_pos = ft_strchr(line_buffer + total_bytes_read, '\n');
+    }
+    free(buffer);
+    return (get_result(&line_buffer, new_line_pos));
 }
-
-/*
-int	main(void) {
-	char *line;
-	int fd = open("../big_line_no_nl", O_RDONLY);
-	line = get_next_line(fd);
-	printf("%s\n", line);
-	free(line);
-	close(fd);
-	return (0);
-}
-*/
