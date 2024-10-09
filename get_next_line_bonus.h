@@ -6,7 +6,7 @@
 /*   By: eebert <eebert@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 23:10:16 by eebert            #+#    #+#             */
-/*   Updated: 2024/09/28 18:38:03 by eebert           ###   ########.fr       */
+/*   Updated: 2024/10/09 13:06:33 by eebert           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <stdlib.h>
 
 # ifndef MAX_FILES_OPENED
-#  define MAX_FILES_OPENED 65536
+#  define MAX_FILES_OPENED 256
 # endif
 
 # ifndef BUFFER_SIZE

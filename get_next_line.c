@@ -6,7 +6,7 @@
 /*   By: eebert <eebert@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 23:08:51 by eebert            #+#    #+#             */
-/*   Updated: 2024/10/09 12:08:55 by eebert           ###   ########.fr       */
+/*   Updated: 2024/10/09 12:57:04 by eebert           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,15 @@
 #include <stdio.h>
 #include <unistd.h>
 
+void	free_buffer(char **buffer)
+{
+	if (*buffer)
+	{
+		free(*buffer);
+		*buffer = NULL;
+	}
+}
+
 int	read_file(int fd, char **line_buffer, char *buffer)
 {
 	int		read_bytes;
@@ -22,15 +31,7 @@ int	read_file(int fd, char **line_buffer, char *buffer)
 
 	read_bytes = read(fd, buffer, BUFFER_SIZE);
 	if (read_bytes <= 0)
-	{
-		if (read_bytes == -1)
-		{
-			free(*line_buffer);
-			*line_buffer = NULL;
-			free(buffer);
-		}
 		return (read_bytes);
-	}
 	buffer[read_bytes] = '\0';
 	if (*line_buffer == NULL)
 		*line_buffer = ft_strndup(buffer, read_bytes);
@@ -40,6 +41,8 @@ int	read_file(int fd, char **line_buffer, char *buffer)
 		free(*line_buffer);
 		*line_buffer = temp;
 	}
+	if (!*line_buffer)
+		return (-1);
 	return (read_bytes);
 }
 
@@ -64,13 +67,14 @@ char	*get_result(char **line_buffer, char *new_line_pos)
 	if (new_line_pos == NULL)
 	{
 		line = ft_strndup(*line_buffer, (size_t)ft_strlen(*line_buffer));
-		free(*line_buffer);
+		if (*line_buffer)
+			free(*line_buffer);
 		*line_buffer = NULL;
 		return (line);
 	}
 	line = ft_strndup(*line_buffer, new_line_pos - *line_buffer + 1);
 	temp = ft_strndup(new_line_pos + 1, (size_t)ft_strlen(new_line_pos + 1));
-	free(*line_buffer);
+	free_buffer(line_buffer);
 	if (line == NULL || temp == NULL)
 	{
 		free(line);
@@ -94,17 +98,13 @@ char	*get_next_line(int fd)
 	new_line_pos = NULL;
 	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
-	{
-		free(line_buffer);
-		line_buffer = NULL;
-		return (NULL);
-	}
+		return (free_buffer(&line_buffer), NULL);
 	while (new_line_pos == NULL && bytes_read > 0)
 	{
 		total_bytes_read += bytes_read;
 		bytes_read = read_file(fd, &line_buffer, buffer);
 		if (bytes_read == -1)
-			return (NULL);
+			return (free_buffer(&buffer), free_buffer(&line_buffer), NULL);
 		new_line_pos = ft_strchr(line_buffer + total_bytes_read, '\n');
 	}
 	return ((free(buffer)), get_result(&line_buffer, new_line_pos));
