@@ -6,11 +6,35 @@
 /*   By: eebert <eebert@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 23:10:28 by eebert            #+#    #+#             */
-/*   Updated: 2024/09/25 23:10:44 by eebert           ###   ########.fr       */
+/*   Updated: 2024/10/09 10:15:48 by eebert           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "get_next_line.h"
 #include <stdlib.h>
+
+static t_list	*ft_lstlast(t_list *lst)
+{
+	if (!lst)
+		return (NULL);
+	if (!lst->next)
+		return (lst);
+	return (ft_lstlast(lst->next));
+}
+
+void	ft_lstadd_back(t_list **lst, t_list *new)
+{
+	if (!new)
+	{
+		return ;
+	}
+	if (!*lst)
+	{
+		*lst = new;
+		return ;
+	}
+	ft_lstlast(*lst)->next = new;
+}
 
 char	*ft_strchr(const char *str, int c)
 {

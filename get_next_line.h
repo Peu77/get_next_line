@@ -6,7 +6,7 @@
 /*   By: eebert <eebert@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 23:10:16 by eebert            #+#    #+#             */
-/*   Updated: 2024/09/28 18:38:17 by eebert           ###   ########.fr       */
+/*   Updated: 2024/10/09 10:21:17 by eebert           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,23 @@
 #  define BUFFER_SIZE 10000000
 # endif
 
-char	*get_next_line(int fd);
+typedef struct s_list
+{
+	char			*buffer;
+	size_t			buffer_size;
+	struct s_list	*next;
+}					t_list;
 
-char	*ft_strchr(const char *str, int c);
+void				ft_lstadd_back(t_list **lst, t_list *new);
 
-char	*ft_strjoin(char const *s1, char const *s2);
+char				*get_next_line(int fd);
 
-char	*ft_strlen(const char *s);
+char				*ft_strchr(const char *str, int c);
 
-char	*ft_strndup(const char *src, size_t n);
+char				*ft_strjoin(char const *s1, char const *s2);
+
+int					ft_strlen(const char *s);
+
+char				*ft_strndup(const char *src, size_t n);
 
 #endif
