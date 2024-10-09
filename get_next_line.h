@@ -6,7 +6,7 @@
 /*   By: eebert <eebert@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 23:10:16 by eebert            #+#    #+#             */
-/*   Updated: 2024/10/09 10:21:17 by eebert           ###   ########.fr       */
+/*   Updated: 2024/10/09 12:08:46 by eebert           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,8 @@
 # include <stdlib.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10000000
+#  define BUFFER_SIZE 5
 # endif
-
-typedef struct s_list
-{
-	char			*buffer;
-	size_t			buffer_size;
-	struct s_list	*next;
-}					t_list;
-
-void				ft_lstadd_back(t_list **lst, t_list *new);
 
 char				*get_next_line(int fd);
 
